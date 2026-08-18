@@ -9,7 +9,7 @@
 <p align="center">
   <strong>The local-first developer workspace.</strong><br>
   80+ developer tools. API client. SQL. MongoDB. Redis.<br>
-  Open source. Offline. Privacy-first.
+  Runs on your machine. No account. No server.
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Open%20Source-AGPL--3.0-111827?style=for-the-badge" alt="Open Source">
   <img src="https://img.shields.io/badge/Offline-First-111827?style=for-the-badge" alt="Offline First">
-  <img src="https://img.shields.io/badge/Privacy-Local%20Processing-111827?style=for-the-badge" alt="Privacy">
+  <img src="https://img.shields.io/badge/Backend-None-111827?style=for-the-badge" alt="No Backend">
   <img src="https://img.shields.io/badge/Developer%20Tools-80%2B-111827?style=for-the-badge" alt="80+ Tools">
 </p>
 
@@ -31,13 +31,13 @@
 
 Developers shouldn't need a browser full of random utility websites, a separate API client, a database GUI, a JWT debugger, a JSON formatter, a regex tester, and a dozen other applications just to get through a normal engineering day.
 
-**MyDevTools brings those workflows together.**
+**MyDevTools brings those workflows together — as an application that runs on your computer.**
 
 It is a developer-focused toolkit built around one principle:
 
-> **If a developer can do it locally, MyDevTools should make it possible locally.**
+> **Your data never leaves your machine.**
 
-From formatting JSON to debugging APIs, inspecting JWTs, working with SQL/MongoDB/Redis, generating developer artifacts, testing regular expressions, and handling security utilities — MyDevTools is designed to be the toolbox that stays with the developer.
+From formatting JSON to debugging APIs, inspecting JWTs, working with SQL/MongoDB/Redis, generating developer artifacts, testing regular expressions, and handling security utilities — MyDevTools is the toolbox that stays with the developer, and only with the developer.
 
 🌐 **[mydevtools.tech](https://mydevtools.tech)**
 
@@ -102,6 +102,8 @@ From formatting JSON to debugging APIs, inspecting JWTs, working with SQL/MongoD
 - S3 / object-storage workflows
 - Docker Compose Generator
 
+> These connect **directly** from your machine to **your** databases and buckets. Connection strings, credentials, and query results are never proxied through a MyDevTools server — because there isn't one.
+
 ### Developer Productivity
 
 `UUID` `Base64` `Cron` `Mock Data` `Images` `CSS`
@@ -126,13 +128,13 @@ And more.
 
 # 🏗️ Engineering Philosophy
 
-MyDevTools is not intended to become another cloud-first developer SaaS.
+MyDevTools is not a cloud developer SaaS, and it is not trying to become one.
 
-We are building a **local-first developer environment** where privacy and speed are architectural properties.
+We removed the backend on purpose. **There is no application server, no hosted database, and no account system.** Privacy and speed stop being policies you have to trust and become properties of the architecture.
 
-### Local by default
+### Local by default — and by design
 
-If a transformation can happen on the user's machine, it should.
+Every transformation happens on your machine. Not "usually." Not "for most tools."
 
 ```text
 ┌───────────────────────┐
@@ -141,10 +143,10 @@ If a transformation can happen on the user's machine, it should.
             │
             ▼
 ┌───────────────────────┐
-│     MyDevTools        │
+│  MyDevTools (desktop) │
 │                       │
 │  Tools + Processing   │
-│  + Local Workflows    │
+│  + Local Storage      │
 └───────────┬───────────┘
             │
             ▼
@@ -153,11 +155,13 @@ If a transformation can happen on the user's machine, it should.
 └───────────────────────┘
 ```
 
-### No mandatory cloud storage
+No round trip. No upload. No "we don't log your data" promise you have to take on faith.
 
-MyDevTools does not require an online storage or synchronization service for its core workflows.
+### No cloud storage
 
-The product is designed so developers can work with sensitive:
+Your workspace — tabs, snippets, saved requests, connection profiles, history, preferences — lives in a local data directory on your own filesystem.
+
+That means you can work with sensitive:
 
 - source code
 - API payloads
@@ -168,56 +172,54 @@ The product is designed so developers can work with sensitive:
 - configuration
 - generated data
 
-without having to upload that data to a MyDevTools cloud backend.
+without any of it touching infrastructure we control.
 
-### Privacy is a feature
+### The only network traffic is yours
 
-For security-sensitive utilities, processing locally is preferable to sending data to a remote server.
+MyDevTools makes network requests in exactly three cases:
 
-Examples include:
+1. **You told it to** — an API call in the API client, a DNS lookup, a database connection.
+2. **Update checks** — a version check against our release feed. Disableable.
+3. **License validation** — a one-time activation call. Disableable after activation.
 
-- hashing
-- JWT inspection
-- encryption/decryption utilities
-- Base64 operations
-- JSON transformation
-- regex testing
-- formatting
-- secret generation
-- certificate inspection
+No analytics. No telemetry. No crash reporting that ships your payloads somewhere.
+
+### Optional sync, off by default
+
+Cloud sync exists as an **opt-in add-on** for developers who want their workspace on multiple machines. It is off unless you turn it on, it is not required for any tool to function, and the app is fully usable having never seen a network.
 
 ### Open source
 
-The project is built in the open so developers can inspect the implementation, contribute improvements, self-host where applicable, and understand how their developer tooling works.
+The project is built in the open so developers can inspect the implementation, verify the privacy claims above rather than believe them, contribute improvements, and build from source.
 
 ---
 
 # 🧱 Technology Stack
 
-MyDevTools uses a modern full-stack engineering ecosystem with a strong emphasis on TypeScript, Python, local processing, containerization, and pragmatic infrastructure.
+MyDevTools is a desktop application built with a web frontend and a native shell. The stack is deliberately small — fewer moving parts means fewer places for your data to go.
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### Frontend
+### Application
 
-- **Next.js**
-- **React**
 - **TypeScript**
-- Modern component-driven UI
-- Responsive developer-focused interfaces
+- **React**
+- **Next.js** (static export)
+- Component-driven UI
+- Developer-focused interfaces
 
 </td>
 <td width="50%" valign="top">
 
-### Backend
+### Desktop Shell
 
-- **Python**
-- **FastAPI**
-- **Pydantic**
-- Async API architecture
-- REST-oriented services
+- **Tauri**
+- Native OS integration
+- Filesystem access
+- Direct TCP for DB clients
+- Small binaries, low memory
 
 </td>
 </tr>
@@ -225,63 +227,62 @@ MyDevTools uses a modern full-stack engineering ecosystem with a strong emphasis
 <tr>
 <td width="50%" valign="top">
 
-### Data
+### Local Storage
 
-- **MongoDB**
-- **Redis**
-- Document-oriented application data
-- High-performance caching
-- Local-first data workflows
+- **SQLite** (local file)
+- OS keychain for secrets
+- Plain files for exports
+- Fully user-owned
+- Portable and inspectable
 
 </td>
 <td width="50%" valign="top">
 
-### Infrastructure
+### Build & Release
 
-- **Docker**
-- **AWS**
-- Containerized services
-- GitHub Actions
-- Automated CI/CD
+- **GitHub Actions**
+- Cross-platform builds
+- Signed releases
+- Reproducible pipelines
+- Static site for docs/marketing
 
 </td>
 </tr>
 </table>
 
-### Engineering stack at a glance
+### Stack at a glance
 
 ```text
                     MyDevTools
-                        │
-        ┌───────────────┼────────────────┐
-        │               │                │
-        ▼               ▼                ▼
-     Frontend        Backend           Local Tools
-        │               │                │
-  Next.js/React     FastAPI/Python     TypeScript
-  TypeScript        Pydantic            Local APIs
-        │               │                │
-        └───────────────┼────────────────┘
-                        │
-              ┌─────────┴─────────┐
-              ▼                   ▼
-           MongoDB              Redis
-              │                   │
-              └─────────┬─────────┘
-                        ▼
-                  Docker / AWS
-                        │
-                        ▼
-                  GitHub Actions
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+              ▼                     ▼
+         Application            Desktop Shell
+              │                     │
+        TypeScript              Tauri / Rust
+        React / Next.js         Native APIs
+              │                     │
+              └──────────┬──────────┘
+                         │
+                         ▼
+                 Local Data Directory
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+           SQLite              OS Keychain
+        (workspace)            (secrets)
+
+              ── no server involved ──
 ```
 
-> The architecture intentionally separates developer-facing tools from backend services so that utilities that do not require a backend can remain local.
+> There is no `backend/` service to deploy, scale, monitor, or breach. That is the point.
 
 ---
 
 # 🖥️ Local-First Architecture
 
-The most important architectural decision is knowing **when not to use a server**.
+The most important architectural decision was **deleting the server**.
 
 ```text
                  ┌─────────────────────┐
@@ -291,18 +292,17 @@ The most important architectural decision is knowing **when not to use a server*
              ┌──────────────┼──────────────┐
              │              │              │
              ▼              ▼              ▼
-        Local Tools      API Tools      DB Tools
+        Local Tools     API Tools       DB Tools
              │              │              │
              ▼              ▼              ▼
-        Browser/OS       Network        Database
-        Processing       Requests       Connection
-             │
-             ▼
-       Local Developer
-          Workflow
+         In-process    Your target     Your database
+         computation     endpoint        (direct)
+             │              │              │
+             └──────────────┼──────────────┘
+                            │
+                            ▼
+                   Local Data Directory
 ```
-
-This distinction matters.
 
 A JSON formatter doesn't need a backend.
 
@@ -312,7 +312,17 @@ A regex tester doesn't need a backend.
 
 A hash generator doesn't need a backend.
 
-A developer should not have to upload sensitive data to a server simply because the tool they need happens to be hosted on the web.
+A developer should never have to upload sensitive data to a stranger's server simply because the tool they need happened to be hosted on the web.
+
+### What this buys you
+
+| | |
+|---|---|
+| **Speed** | No network latency on any transformation. Operations are instant. |
+| **Offline** | Works on a plane, in a SCIF, on an air-gapped machine. |
+| **Privacy** | Nothing to intercept, log, subpoena, or leak. |
+| **Longevity** | No shutdown risk. If we vanish tomorrow, your copy keeps working. |
+| **Compliance** | Easier to clear with security teams — there's no data processor to review. |
 
 ---
 
@@ -322,39 +332,41 @@ Security-sensitive developer tooling deserves a different threat model.
 
 We design around:
 
-### Least data movement
+### Zero data movement
 
-Don't transmit data that doesn't need to leave the machine.
+The strongest guarantee isn't encrypting data in transit. It's not transmitting it at all.
 
-### Least privilege
+### Minimal attack surface
 
-Services and CI jobs should receive only the permissions they actually require.
+No server means no API to exploit, no database to dump, no session store to hijack, and no shared multi-tenant blast radius.
+
+### Secrets stay in the OS
+
+Credentials and connection strings go to the platform keychain (Keychain / Credential Manager / Secret Service), not to a config file in plaintext and never to us.
 
 ### Secure defaults
 
-The easiest workflow should also be a safe workflow.
+The easiest workflow should also be the safe workflow. Sync off, telemetry absent, local-only unless you say otherwise.
 
 ### Transparent processing
 
-Developers should be able to understand where their data goes and why.
+Developers should be able to understand where their data goes and why. Here the answer is short: nowhere.
 
 ### Auditable software
 
-Open source makes security review possible.
+Open source makes security review possible. Every claim in this README is checkable against the source.
 
-### Dependency awareness
+### Supply chain awareness
 
-Third-party dependencies and build infrastructure are treated as part of the application's attack surface.
+Dependencies, build infrastructure, and release signing are treated as part of the application's attack surface — for a distributed binary, the pipeline *is* the threat model.
 
 ---
 
-# 🚀 Operations & Engineering
+# 🚀 Build & Release
 
-We treat MyDevTools as an engineering platform, not just a collection of utilities.
+We treat MyDevTools as an engineering product, not a collection of utilities.
 
 ## CI/CD
-
-Our engineering workflow emphasizes:
 
 ```text
 Commit
@@ -365,57 +377,53 @@ Pull Request
   ├── Lint
   ├── Type checks
   ├── Tests
-  ├── Security checks
-  ├── Build
+  ├── Dependency audit
+  ├── Cross-platform build
   │
   ▼
 Review
   │
   ▼
-Deploy
+Tagged Release
+  │
+  ├── macOS  (signed + notarized)
+  ├── Windows (Coming Soon)
+  └── Linux  (Coming Soon)
 ```
 
-Security and dependency checks are designed to fail closed where possible rather than silently producing false-clean results.
+Security and dependency checks fail closed rather than silently producing false-clean results.
 
-## Containerization
+## Distribution
 
-Services are containerized with **Docker** to keep development, testing, and deployment environments reproducible.
+Releases are published as signed, versioned artifacts on GitHub Releases. Builds are reproducible from source, so you can verify what you're running.
 
-## Infrastructure
+## Reliability
 
-Cloud infrastructure is used for services that actually require infrastructure. Local developer utilities should not depend on the cloud merely to perform a local transformation.
+Because there is no production service, "operations" means shipping a binary that doesn't break:
 
-## Observability
-
-Production services are designed around operational visibility, including:
-
-- structured application logs
-- service health checks
-- failure visibility
-- resource monitoring
-- deployment verification
+- crash-safe local storage with migrations
+- graceful degradation when offline
+- opt-in diagnostics that stay on disk
+- no forced auto-updates
 
 ---
 
 # 🧩 Repository Philosophy
 
-Our repositories are organized around clear responsibilities rather than one giant application.
-
-Typical boundaries include:
+Repositories are organized around clear responsibilities rather than one giant application.
 
 ```text
 mydevtools/
 │
-├── frontend/
-│   ├── web application
-│   ├── UI components
-│   └── developer workflows
+├── app/
+│   ├── UI + tool surfaces
+│   ├── workspace state
+│   └── local persistence
 │
-├── backend/
-│   ├── APIs
-│   ├── authentication
-│   ├── application services
-│   └── data access
+├── shell/
+│   ├── native integration
+│   ├── filesystem + keychain
+│   └── network + DB drivers
 │
 ├── tools/
 │   ├── formatters
@@ -424,10 +432,13 @@ mydevtools/
 │   ├── API utilities
 │   └── developer helpers
 │
-├── infrastructure/
-│   ├── Docker
-│   ├── deployment
+├── build/
+│   ├── packaging
+│   ├── signing
 │   └── CI/CD
+│
+├── web/
+│   └── static marketing + docs site
 │
 └── docs/
     ├── architecture
@@ -447,13 +458,13 @@ A new utility should ideally be:
 
 1. Easy to understand
 2. Easy to test
-3. Independent where possible
-4. Reusable
-5. Fast
-6. Privacy-preserving
+3. Runnable without a network
+4. Independent where possible
+5. Reusable
+6. Fast
 7. Consistent with the rest of the platform
 
-We prefer composable primitives over tightly coupled features.
+We prefer composable primitives over tightly coupled features. If a tool needs a server to work, it probably doesn't belong here.
 
 ---
 
@@ -471,7 +482,7 @@ Contributions are welcome across:
 - 🔐 Security
 - 🧪 Testing
 - 🏗️ Architecture
-- 🐳 Infrastructure
+- 📦 Packaging & distribution
 - 📚 Documentation
 - ♿ Accessibility
 - 🛠️ Developer experience
@@ -489,7 +500,7 @@ git clone <repository>
 cd <repository>
 
 # install dependencies
-# run the development environment
+# run the desktop app in development mode
 # run tests
 # verify lint/type checks
 ```
@@ -538,14 +549,16 @@ The number of tools matters less than how much **context switching** we eliminat
 
 | Traditional workflow | MyDevTools |
 |---|---|
-| Many browser tabs | One workspace |
+| Many browser tabs | One application |
 | Separate utilities | Unified toolkit |
 | Copy/paste between sites | Connected workflows |
-| Cloud tool for every small task | Local processing where possible |
-| Scattered developer utilities | One developer environment |
+| Paste secrets into a stranger's website | Everything stays local |
+| Data uploaded to process | Data never leaves the machine |
+| Account required | No account, no login |
+| Breaks without internet | Fully offline |
+| Vendor shutdown risk | Your copy keeps working |
 | Closed tooling | Open source |
-| SaaS dependency | Offline-first |
-| Tool switching | Workflow continuity |
+| Subscription treadmill | Own it |
 
 ---
 
@@ -579,10 +592,9 @@ Every contribution helps turn MyDevTools into a better open-source developer pla
 
 <p align="center">
   <strong>MyDevTools</strong><br>
-  Built for developers who want fewer tabs, faster workflows, and more control.
+  Built for developers who want fewer tabs, faster workflows, and full control of their data.
 </p>
 
 <p align="center">
-  <sub>Open source · Local-first · Offline · Developer-first</sub>
+  <sub>Open source · Local-first · Offline · No backend</sub>
 </p>
-
